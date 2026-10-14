@@ -1,0 +1,57 @@
+<section>
+  <div class="toolbar">
+    <h1>{{ vm.title }}</h1>
+    <button type="button" ng-click="vm.new()">Novo</button>
+  </div>
+
+  <p class="error" role="alert" ng-if="vm.error">{{ vm.error }}</p>
+
+  <form name="f" novalidate ng-if="vm.form" ng-submit="vm.save(f)" class="card">
+    <div class="field" ng-repeat="fld in vm.fields">
+      <label for="fld-{{fld.key}}">{{ fld.label }}<span ng-if="fld.required"> *</span></label>
+
+      <select id="fld-{{fld.key}}" name="{{fld.key}}" ng-if="fld.type === 'select'"
+              ng-model="vm.form[fld.key]" ng-required="fld.required"
+              ng-options="o.value as o.label for o in fld.options">
+        <option value="">Selecione</option>
+      </select>
+
+      <input id="fld-{{fld.key}}" name="{{fld.key}}" ng-if="fld.type !== 'select'"
+             type="{{ fld.type || 'text' }}" ng-model="vm.form[fld.key]"
+             ng-required="fld.required" ng-attr-min="{{ fld.min }}" ng-attr-max="{{ fld.max }}">
+
+      <span class="error" ng-if="f.$submitted && f[fld.key].$invalid">Campo invalido ou obrigatorio.</span>
+    </div>
+    <div class="actions">
+      <button type="submit">Salvar</button>
+      <button type="button" class="secondary" ng-click="vm.cancel()">Cancelar</button>
+    </div>
+  </form>
+
+  <p ng-if="vm.loading">Carregando...</p>
+  <p ng-if="!vm.loading && !vm.error && vm.items.length === 0">Nenhum registro encontrado.</p>
+
+  <table ng-if="vm.items.length">
+    <thead>
+      <tr>
+        <th ng-repeat="c in vm.columns" scope="col">{{ c.label }}</th>
+        <th scope="col">Acoes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in vm.items track by item.id">
+        <td ng-repeat="c in vm.columns">{{ item[c.key] }}</td>
+        <td>
+          <button type="button" class="secondary" ng-click="vm.edit(item)">Editar</button>
+          <button type="button" class="danger" ng-click="vm.remove(item)">Excluir</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pager" ng-if="vm.total > vm.pageSize">
+    <button type="button" ng-click="vm.goTo(vm.page - 1)" ng-disabled="vm.page === 1">Anterior</button>
+    <span>Pagina {{ vm.page }} de {{ vm.totalPages() }}</span>
+    <button type="button" ng-click="vm.goTo(vm.page + 1)" ng-disabled="vm.page === vm.totalPages()">Proxima</button>
+  </div>
+</section>

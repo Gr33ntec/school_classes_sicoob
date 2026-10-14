@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR" ng-app="schoolApp">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestao Escolar</title>
+  <link rel="stylesheet" href="app/shared/styles.css">
+  <base href="/src/">
+</head>
+<body>
+  <header class="topbar">
+    <strong>Gestao Escolar</strong>
+    <nav aria-label="Principal">
+      <a href="#!/students">Alunos</a>
+      <a href="#!/teachers">Professores</a>
+      <a href="#!/courses">Cursos</a>
+      <a href="#!/classes">Turmas</a>
+      <a href="#!/enrollments">Matriculas</a>
+    </nav>
+  </header>
+
+  <main ng-view></main>
+
+  <script src="../node_modules/angular/angular.min.js"></script>
+  <script src="../node_modules/angular-route/angular-route.min.js"></script>
+  <script src="app/app.module.js"></script>
+  <script src="app/app.config.js"></script>
+  <script src="app/shared/api.service.js"></script>
+  <script src="app/shared/crud.controller.js"></script>
+  <script src="app/students/students.controller.js"></script>
+  <script src="app/teachers/teachers.controller.js"></script>
+  <script src="app/courses/courses.controller.js"></script>
+  <script src="app/classes/classes.controller.js"></script>
+  <script src="app/enrollments/enrollments.controller.js"></script>
+</body>
+</html>
