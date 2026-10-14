@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlalchemy>=2
+alembic
+pymysql
+cryptography
+python-dotenv
+pytest
+httpx
