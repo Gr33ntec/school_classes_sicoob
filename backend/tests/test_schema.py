@@ -1,48 +1,9 @@
 """Testes de integracao das restricoes no schema de teste (isolado do real)."""
-import os
-import subprocess
-import sys
-from pathlib import Path
-
 import pytest
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 from sqlalchemy.exc import DBAPIError, IntegrityError
 
-from app.core.config import database_url
-
-BACKEND = Path(__file__).resolve().parents[1]
-TEST_DB = os.environ.get("DB_TEST_NAME", "school_management_test")
-
-
-@pytest.fixture(scope="module")
-def engine():
-    admin = create_engine(database_url("mysql"))
-    with admin.connect() as c:
-        c.execute(text(f"DROP DATABASE IF EXISTS `{TEST_DB}`"))
-        c.execute(
-            text(
-                f"CREATE DATABASE `{TEST_DB}` CHARACTER SET utf8mb4 "
-                "COLLATE utf8mb4_0900_ai_ci"
-            )
-        )
-    env = {**os.environ, "ALEMBIC_DB_NAME": TEST_DB}
-    subprocess.run(
-        [sys.executable, "-m", "alembic", "upgrade", "head"],
-        cwd=BACKEND, env=env, check=True,
-    )
-    eng = create_engine(database_url(TEST_DB))
-    yield eng
-    eng.dispose()
-    with admin.connect() as c:
-        c.execute(text(f"DROP DATABASE IF EXISTS `{TEST_DB}`"))
-
-
-@pytest.fixture
-def conn(engine):
-    with engine.connect() as c:
-        trans = c.begin()
-        yield c
-        trans.rollback()
+pytestmark = pytest.mark.integration
 
 
 def _seed(c):
@@ -102,7 +63,7 @@ def test_delete_related_blocked(conn):
         conn.execute(text("DELETE FROM students"))
 
 
-def test_invalid_grade_and_status(conn):
+def test_invalid_status(conn):
     _seed(conn)
     with pytest.raises(DBAPIError):
         conn.execute(text("UPDATE students SET status='x'"))

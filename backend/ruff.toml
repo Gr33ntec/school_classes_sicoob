@@ -1,0 +1,3 @@
+[lint.per-file-ignores]
+# Depends()/Query() em defaults e o idioma do FastAPI.
+"app/api/**" = ["B008"]

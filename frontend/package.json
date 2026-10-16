@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "http-server . -p 4200 -c-1 -o /src/index.html"
+    "start": "http-server . -p 8888 -c-1 -o /src/index.html"
   },
   "dependencies": {
     "angular": "1.8.3",

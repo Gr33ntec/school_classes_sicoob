@@ -36,19 +36,43 @@
         load();
       };
 
+      // input[type=date] do AngularJS exige objetos Date; a API usa 'YYYY-MM-DD'.
+      function dateFields() {
+        return config.fields.filter(function (f) { return f.type === 'date'; });
+      }
+      function toForm(item) {
+        var copy = angular.copy(item);
+        dateFields().forEach(function (f) {
+          var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(copy[f.key] || '');
+          copy[f.key] = m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+        });
+        return copy;
+      }
+      function toPayload(form) {
+        var body = angular.copy(form);
+        dateFields().forEach(function (f) {
+          var d = form[f.key];
+          body[f.key] = d instanceof Date
+            ? d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2)
+            : null;
+        });
+        return body;
+      }
+
       vm.new = function () {
         vm.editing = null;
         vm.form = angular.copy(config.defaults || {});
       };
       vm.edit = function (item) {
         vm.editing = item.id;
-        vm.form = angular.copy(item);
+        vm.form = toForm(item);
       };
       vm.cancel = function () { vm.form = null; vm.editing = null; };
 
       vm.save = function (formCtrl) {
         if (formCtrl.$invalid) { return; }
-        var op = vm.editing ? api.update(vm.editing, vm.form) : api.create(vm.form);
+        var body = toPayload(vm.form);
+        var op = vm.editing ? api.update(vm.editing, body) : api.create(body);
         vm.error = null;
         op.then(function () { vm.cancel(); load(); })
           .catch(function (e) { vm.error = ErrorMessage(e); });

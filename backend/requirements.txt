@@ -5,5 +5,3 @@ alembic
 pymysql
 cryptography
 python-dotenv
-pytest
-httpx
