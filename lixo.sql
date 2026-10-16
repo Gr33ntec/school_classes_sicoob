@@ -1,6 +1,6 @@
 CREATE TABLE students (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  registration_code VARCHAR(30) NOT NULL,
+  registration_codes VARCHAR(30) NOT NULL,
   full_name VARCHAR(160) NOT NULL,
   email VARCHAR(254) NULL,
   phone VARCHAR(30) NULL,
