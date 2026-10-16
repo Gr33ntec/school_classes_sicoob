@@ -1,13 +1,30 @@
+name: Commit Review Agent
+
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
-  create-review-task:
+  create-agent-task:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Trigger agent task
+      - name: Create Copilot Agent Task
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          OWNER: Gr33ntec
+          REPO: school_classes_sicoob
         run: |
-          echo "Novo push recebido"
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Authorization: Bearer $GH_PAT" \
+            https://api.github.com/agents/repos/$OWNER/$REPO/tasks \
+            -d '{
+              "prompt": "Use o agente commits-review definido neste repositório para revisar os commits recém enviados à branch main. Analise mensagens de commit, atomicidade, escopo das alterações e aderência às boas práticas. Gere um relatório detalhado.",
+              "base_ref": "main"
+            }'
