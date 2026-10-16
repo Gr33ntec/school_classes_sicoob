@@ -84,7 +84,11 @@ Apresente uma recomendação final sobre a qualidade do histórico analisado.
 
 ## Identificador
 
+Na primeira linha de TODA resposta escreva:
+
 AGENT-ID: COMMITS-REVIEW-V1
+
+Nunca omita essa informação.
 
 # Restrições
 
