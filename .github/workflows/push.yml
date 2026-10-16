@@ -1,0 +1,13 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-review-task:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger agent task
+        run: |
+          echo "Novo push recebido"
